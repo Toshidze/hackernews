@@ -33,6 +33,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 'hacker news',
                 style: kAppBarTextStyle,
               ),
+              // automaticallyImplyLeading: false,
               bottom: TabBar(
                 isScrollable: true,
                 automaticIndicatorColorAdjustment: false,
