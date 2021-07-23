@@ -26,6 +26,27 @@ const kTitleTextStyle = TextStyle(
   color: Colors.black,
 );
 
+const kCommentTextStyle = TextStyle(
+  fontFamily: 'FiraSans',
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
+
+const kCommentTextStyleGray = TextStyle(
+  fontFamily: 'FiraSans',
+  fontSize: 12,
+  fontWeight: FontWeight.w400,
+  color: Colors.grey,
+);
+
+const kTitleCommentTextStyle = TextStyle(
+  fontFamily: 'FiraSans',
+  fontSize: 12,
+  fontWeight: FontWeight.w600,
+  color: Color(0xFF1D49BA),
+);
+
 const kConditionTextStyle = TextStyle(
   fontSize: 100.0,
 );
