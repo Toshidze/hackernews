@@ -1,60 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:hackernews/models/newsModels.dart';
-import 'package:hackernews/services/news.dart';
+import 'package:hackernews/models/news_models.dart';
+import 'package:hackernews/repositories/comment_repo.dart';
 import 'package:hackernews/utilities/constants.dart';
 import 'comment_form.dart';
 import 'comment_titel.dart';
 
-class Comment extends StatefulWidget {
-  final News newsItem;
+class Comment extends StatelessWidget {
   Comment({Key? key, required this.newsItem});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _CommentState();
-  }
-}
-
-class _CommentState extends State<Comment> {
-  NewsModel newsModel = NewsModel();
-  Map<int, News> comments = Map();
-
-  Future<News> getComments(int id) async {
-    var item = await newsModel.getNewsItem(id);
-    item.comments = await newsModel.getNewsComments(item);
-    return item;
-  }
+  final News newsItem;
+  final CommentRepo commentRepo = CommentRepo();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: buildAppBar(),
-      body: (widget.newsItem.kids.length == 0) ? noComments() : buildBody(),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          'hacker news',
+          style: kAppBarTextStyle,
+        ),
+      ),
+      body: (newsItem.kids.length == 0) ? noComments() : buildBody(),
     );
   }
 
   ListView buildBody() {
     return ListView.builder(
-      itemCount: 1 + widget.newsItem.kids.length,
+      itemCount: 1 + newsItem.kids.length,
       itemBuilder: (context, index) {
         if (index == 0) {
-          return CommentHeader(widget.newsItem);
+          return CommentHeader(newsItem);
         }
-
         return FutureBuilder(
-          future: getComments(widget.newsItem.kids[index - 1]),
+          future: commentRepo.getComments(newsItem.kids[index - 1]),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (comments[index - 1] != null) {
-              var newsItem = comments[index - 1];
+            if (commentRepo.comments[index - 1] != null) {
+              var newsItem = commentRepo.comments[index - 1];
               return CommentForm(
-                newsItem: newsItem as News,
+                newsItem: newsItem!,
                 key: Key(newsItem.id.toString()),
               );
             }
             if (snapshot.hasData && snapshot.data != null) {
               var newsItem = snapshot.data;
-              comments[index - 1] = newsItem;
+              commentRepo.comments[index - 1] = newsItem;
               return CommentForm(
                 newsItem: newsItem,
                 key: Key(
@@ -84,29 +74,22 @@ class _CommentState extends State<Comment> {
     );
   }
 
-  Container noComments() {
-    return Container(
-      child: Center(
-        child: Text(
-          "No comments!",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Column noComments() {
+    return Column(
+      children: [
+        CommentHeader(newsItem),
+        Expanded(
+          child: Container(
+            child: Center(
+              child: Text(
+                "No comments!",
+                textAlign: TextAlign.center,
+                style: kNoCommentsTextStyle,
+              ),
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.black,
-      title: Text(
-        'hacker news',
-        style: kAppBarTextStyle,
-      ),
+      ],
     );
   }
 }
