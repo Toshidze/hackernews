@@ -25,6 +25,12 @@ const kTitleTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
+const kNoCommentsTextStyle = TextStyle(
+  fontFamily: 'FiraSans',
+  color: Colors.black,
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+);
 
 const kCommentTextStyle = TextStyle(
   fontFamily: 'FiraSans',
